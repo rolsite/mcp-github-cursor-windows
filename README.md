@@ -224,15 +224,26 @@ Este documento foi atualizado diretamente usando o MCP GitHub, demonstrando a ca
 
 ## Nota sobre MCP e Git Local
 
-Ao usar o MCP GitHub no Cursor, é importante entender a interação com o Git local:
+Para usar o MCP GitHub no Cursor e manter o Git local atualizado automaticamente, este projeto implementa sincronização automática usando Cursor Rules:
 
-1. **Para operações do GitHub** (PRs, Issues, etc):
-   - Use os comandos MCP diretamente
-   - Exemplo: Criar PR, gerenciar issues, etc.
+### Como funciona
 
-2. **Para alterações em arquivos**:
-   - Faça as alterações localmente
-   - Use `git add` e `git commit` normalmente
-   - Use MCP ou Git para push
+1. **Sincronização Automática**: 
+   - Quando qualquer comando MCP é detectado, o Git local é automaticamente sincronizado
+   - Um comando `git fetch origin && git reset --hard origin/main` é executado após operações MCP
+   - Você verá uma notificação confirmando a sincronização
 
-Isso garante que o Cursor mantenha o status do Git sempre atualizado.
+2. **Comandos Específicos com Sincronização**:
+   - Alguns comandos como `create_or_update_file` e `push_files` têm sincronização integrada
+   - Após uma pequena espera para conclusão da operação, o Git local é sincronizado
+
+3. **Sincronização Manual**:
+   - Se necessário, digite "sincronizar git" ou "sync git" para forçar a sincronização
+
+### Benefícios
+
+- Use sempre o MCP para operações do GitHub
+- O Cursor manterá o status do Git atualizado automaticamente
+- Não é necessário lembrar de comandos Git adicionais
+
+> **Nota**: A sincronização usa `git reset --hard`, que descarta qualquer mudança local não commitada. Certifique-se de ter feito commit de todas as mudanças importantes antes de usar operações MCP.

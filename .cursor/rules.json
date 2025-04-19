@@ -1,0 +1,640 @@
+{
+  "rules": [
+    {
+      "name": "MCP - Sincronização Automática",
+      "description": "Sincroniza o Git local após operações MCP",
+      "pattern": "/mcp\\.(invoke|github-mcp|create_or_update_file|push_files)/i",
+      "actions": [
+        {
+          "type": "command",
+          "command": "terminal.sendText",
+          "args": {
+            "text": "git fetch origin && git reset --hard origin/main"
+          }
+        },
+        {
+          "type": "notify",
+          "message": "Repositório local sincronizado com GitHub após operação MCP"
+        }
+      ]
+    },
+    {
+      "name": "GitHub - Repository - Criar",
+      "description": "Criar novo repositório via MCP",
+      "pattern": "/criar( novo)? repo(sitório)?|new repo(sitory)?/i",
+      "actions": [
+        {
+          "type": "command",
+          "command": "mcp.invoke",
+          "args": {
+            "provider": "github-mcp",
+            "command": "create_repository"
+          }
+        }
+      ]
+    },
+    {
+      "name": "GitHub - Repository - Fork",
+      "description": "Fazer fork de repositório via MCP",
+      "pattern": "/fork( repo(sitório)?)?/i",
+      "actions": [
+        {
+          "type": "command",
+          "command": "mcp.invoke",
+          "args": {
+            "provider": "github-mcp",
+            "command": "fork_repository"
+          }
+        }
+      ]
+    },
+    {
+      "name": "GitHub - Branch - Criar",
+      "description": "Criar nova branch via MCP",
+      "pattern": "/criar branch|nova branch|new branch|git branch/i",
+      "actions": [
+        {
+          "type": "command",
+          "command": "mcp.invoke",
+          "args": {
+            "provider": "github-mcp",
+            "command": "create_branch"
+          }
+        }
+      ]
+    },
+    {
+      "name": "GitHub - Branch - Listar",
+      "description": "Listar branches via MCP",
+      "pattern": "/listar branches|list branches/i",
+      "actions": [
+        {
+          "type": "command",
+          "command": "mcp.invoke",
+          "args": {
+            "provider": "github-mcp",
+            "command": "list_branches"
+          }
+        }
+      ]
+    },
+    {
+      "name": "GitHub - Files - Commit",
+      "description": "Fazer commit via MCP",
+      "pattern": "/git commit|commit changes/i",
+      "actions": [
+        {
+          "type": "suggest",
+          "label": "Usar MCP GitHub",
+          "message": "Posso realizar o commit usando MCP GitHub. Você gostaria de usar create_or_update_file ou push_files?"
+        }
+      ]
+    },
+    {
+      "name": "GitHub - Files - Push",
+      "description": "Fazer push via MCP",
+      "pattern": "/git push|push changes/i",
+      "actions": [
+        {
+          "type": "suggest",
+          "label": "Usar MCP GitHub",
+          "message": "Posso enviar as alterações usando MCP GitHub sem precisar de git push. Quer que eu faça isso?"
+        }
+      ]
+    },
+    {
+      "name": "GitHub - Files - Atualizar Arquivo",
+      "description": "Atualizar arquivo via MCP e sincronizar",
+      "pattern": "/update file|atualizar arquivo/i",
+      "actions": [
+        {
+          "type": "command",
+          "command": "mcp.invoke",
+          "args": {
+            "provider": "github-mcp",
+            "command": "create_or_update_file"
+          }
+        },
+        {
+          "type": "sequence",
+          "actions": [
+            {
+              "type": "wait",
+              "delay": 2000
+            },
+            {
+              "type": "command",
+              "command": "terminal.sendText",
+              "args": {
+                "text": "git fetch origin && git reset --hard origin/main"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "GitHub - Files - Obter Conteúdo",
+      "description": "Obter conteúdo de arquivo via MCP",
+      "pattern": "/get file( content)?|obter (conteúdo de )?arquivo/i",
+      "actions": [
+        {
+          "type": "command",
+          "command": "mcp.invoke",
+          "args": {
+            "provider": "github-mcp",
+            "command": "get_file_contents"
+          }
+        }
+      ]
+    },
+    {
+      "name": "GitHub - Files - Push Multiple",
+      "description": "Enviar múltiplos arquivos via MCP e sincronizar",
+      "pattern": "/push (multiple|many) files|enviar (múltiplos|vários) arquivos/i",
+      "actions": [
+        {
+          "type": "command",
+          "command": "mcp.invoke",
+          "args": {
+            "provider": "github-mcp",
+            "command": "push_files"
+          }
+        },
+        {
+          "type": "sequence",
+          "actions": [
+            {
+              "type": "wait",
+              "delay": 2000
+            },
+            {
+              "type": "command",
+              "command": "terminal.sendText",
+              "args": {
+                "text": "git fetch origin && git reset --hard origin/main"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "GitHub - Issues - Criar",
+      "description": "Criar issue via MCP",
+      "pattern": "/criar issue|nova issue|new issue/i",
+      "actions": [
+        {
+          "type": "command",
+          "command": "mcp.invoke",
+          "args": {
+            "provider": "github-mcp",
+            "command": "create_issue"
+          }
+        }
+      ]
+    },
+    {
+      "name": "GitHub - Issues - Listar",
+      "description": "Listar issues via MCP",
+      "pattern": "/listar issues|list issues/i",
+      "actions": [
+        {
+          "type": "command",
+          "command": "mcp.invoke",
+          "args": {
+            "provider": "github-mcp",
+            "command": "list_issues"
+          }
+        }
+      ]
+    },
+    {
+      "name": "GitHub - Issues - Obter Detalhes",
+      "description": "Obter detalhes de uma issue via MCP",
+      "pattern": "/get issue|obter (detalhes de )?issue/i",
+      "actions": [
+        {
+          "type": "command",
+          "command": "mcp.invoke",
+          "args": {
+            "provider": "github-mcp",
+            "command": "get_issue"
+          }
+        }
+      ]
+    },
+    {
+      "name": "GitHub - Issues - Comentar",
+      "description": "Adicionar comentário a issue via MCP",
+      "pattern": "/comentar( na)? issue|comment( on)? issue/i",
+      "actions": [
+        {
+          "type": "command",
+          "command": "mcp.invoke",
+          "args": {
+            "provider": "github-mcp",
+            "command": "add_issue_comment"
+          }
+        }
+      ]
+    },
+    {
+      "name": "GitHub - Issues - Atualizar",
+      "description": "Atualizar uma issue via MCP",
+      "pattern": "/atualizar issue|update issue/i",
+      "actions": [
+        {
+          "type": "command",
+          "command": "mcp.invoke",
+          "args": {
+            "provider": "github-mcp",
+            "command": "update_issue"
+          }
+        }
+      ]
+    },
+    {
+      "name": "GitHub - Issues - Listar Comentários",
+      "description": "Listar comentários de uma issue via MCP",
+      "pattern": "/listar comentários( da)? issue|list issue comments/i",
+      "actions": [
+        {
+          "type": "command",
+          "command": "mcp.invoke",
+          "args": {
+            "provider": "github-mcp",
+            "command": "get_issue_comments"
+          }
+        }
+      ]
+    },
+    {
+      "name": "GitHub - Pull Request - Criar",
+      "description": "Criar PR via MCP",
+      "pattern": "/criar pr|novo pr|new pr|create pull request/i",
+      "actions": [
+        {
+          "type": "command",
+          "command": "mcp.invoke",
+          "args": {
+            "provider": "github-mcp",
+            "command": "create_pull_request"
+          }
+        }
+      ]
+    },
+    {
+      "name": "GitHub - Pull Request - Obter Detalhes",
+      "description": "Obter detalhes de um PR via MCP",
+      "pattern": "/get pr|obter (detalhes de )?pr/i",
+      "actions": [
+        {
+          "type": "command",
+          "command": "mcp.invoke",
+          "args": {
+            "provider": "github-mcp",
+            "command": "get_pull_request"
+          }
+        }
+      ]
+    },
+    {
+      "name": "GitHub - Pull Request - Listar",
+      "description": "Listar PRs via MCP",
+      "pattern": "/listar pr|list pr|listar pull requests/i",
+      "actions": [
+        {
+          "type": "command",
+          "command": "mcp.invoke",
+          "args": {
+            "provider": "github-mcp",
+            "command": "list_pull_requests"
+          }
+        }
+      ]
+    },
+    {
+      "name": "GitHub - Pull Request - Merge",
+      "description": "Fazer merge de PR via MCP",
+      "pattern": "/merge pr|merge pull request/i",
+      "actions": [
+        {
+          "type": "command",
+          "command": "mcp.invoke",
+          "args": {
+            "provider": "github-mcp",
+            "command": "merge_pull_request"
+          }
+        }
+      ]
+    },
+    {
+      "name": "GitHub - Pull Request - Atualizar",
+      "description": "Atualizar PR via MCP",
+      "pattern": "/atualizar pr|update pr|update pull request/i",
+      "actions": [
+        {
+          "type": "command",
+          "command": "mcp.invoke",
+          "args": {
+            "provider": "github-mcp",
+            "command": "update_pull_request"
+          }
+        }
+      ]
+    },
+    {
+      "name": "GitHub - Pull Request - Listar Arquivos",
+      "description": "Listar arquivos de um PR via MCP",
+      "pattern": "/listar arquivos (do|no) pr|list pr files/i",
+      "actions": [
+        {
+          "type": "command",
+          "command": "mcp.invoke",
+          "args": {
+            "provider": "github-mcp",
+            "command": "get_pull_request_files"
+          }
+        }
+      ]
+    },
+    {
+      "name": "GitHub - Pull Request - Atualizar Branch",
+      "description": "Atualizar branch de PR com a base via MCP",
+      "pattern": "/atualizar branch (do|no) pr|update pr branch/i",
+      "actions": [
+        {
+          "type": "command",
+          "command": "mcp.invoke",
+          "args": {
+            "provider": "github-mcp",
+            "command": "update_pull_request_branch"
+          }
+        }
+      ]
+    },
+    {
+      "name": "GitHub - Review - Aprovar PR",
+      "description": "Aprovar PR via MCP",
+      "pattern": "/aprovar pr|approve pr|approve pull request/i",
+      "actions": [
+        {
+          "type": "function",
+          "function": "approveCurrentPR"
+        }
+      ]
+    },
+    {
+      "name": "GitHub - Review - Criar Revisão",
+      "description": "Criar revisão em PR via MCP",
+      "pattern": "/criar revisão( do| no)? pr|create pr review/i",
+      "actions": [
+        {
+          "type": "command",
+          "command": "mcp.invoke",
+          "args": {
+            "provider": "github-mcp",
+            "command": "create_pull_request_review"
+          }
+        }
+      ]
+    },
+    {
+      "name": "GitHub - Review - Comentar PR",
+      "description": "Comentar em PR via MCP",
+      "pattern": "/comentar( no)? pr|comment( on)? pr/i",
+      "actions": [
+        {
+          "type": "command",
+          "command": "mcp.invoke",
+          "args": {
+            "provider": "github-mcp",
+            "command": "add_pull_request_review_comment"
+          }
+        }
+      ]
+    },
+    {
+      "name": "GitHub - Review - Listar Revisões",
+      "description": "Listar revisões de um PR via MCP",
+      "pattern": "/listar revisões( do| no)? pr|list pr reviews/i",
+      "actions": [
+        {
+          "type": "command",
+          "command": "mcp.invoke",
+          "args": {
+            "provider": "github-mcp",
+            "command": "get_pull_request_reviews"
+          }
+        }
+      ]
+    },
+    {
+      "name": "GitHub - Review - Listar Comentários",
+      "description": "Listar comentários de revisão de um PR via MCP",
+      "pattern": "/listar comentários( do| no)? pr|list pr comments/i",
+      "actions": [
+        {
+          "type": "command",
+          "command": "mcp.invoke",
+          "args": {
+            "provider": "github-mcp",
+            "command": "get_pull_request_comments"
+          }
+        }
+      ]
+    },
+    {
+      "name": "GitHub - Search - Código",
+      "description": "Buscar código via MCP",
+      "pattern": "/buscar código|search code/i",
+      "actions": [
+        {
+          "type": "command",
+          "command": "mcp.invoke",
+          "args": {
+            "provider": "github-mcp",
+            "command": "search_code"
+          }
+        }
+      ]
+    },
+    {
+      "name": "GitHub - Search - Repositórios",
+      "description": "Buscar repositórios via MCP",
+      "pattern": "/buscar repos|search repos/i",
+      "actions": [
+        {
+          "type": "command",
+          "command": "mcp.invoke",
+          "args": {
+            "provider": "github-mcp",
+            "command": "search_repositories"
+          }
+        }
+      ]
+    },
+    {
+      "name": "GitHub - Search - Issues",
+      "description": "Buscar issues via MCP",
+      "pattern": "/buscar issues|search issues/i",
+      "actions": [
+        {
+          "type": "command",
+          "command": "mcp.invoke",
+          "args": {
+            "provider": "github-mcp",
+            "command": "search_issues"
+          }
+        }
+      ]
+    },
+    {
+      "name": "GitHub - Search - Usuários",
+      "description": "Buscar usuários via MCP",
+      "pattern": "/buscar usuários|search users/i",
+      "actions": [
+        {
+          "type": "command",
+          "command": "mcp.invoke",
+          "args": {
+            "provider": "github-mcp",
+            "command": "search_users"
+          }
+        }
+      ]
+    },
+    {
+      "name": "GitHub - Security - Listar Alertas de Código",
+      "description": "Listar alertas de escaneamento de código via MCP",
+      "pattern": "/listar alertas( de)? código|list code( scanning)? alerts/i",
+      "actions": [
+        {
+          "type": "command",
+          "command": "mcp.invoke",
+          "args": {
+            "provider": "github-mcp",
+            "command": "list_code_scanning_alerts"
+          }
+        }
+      ]
+    },
+    {
+      "name": "GitHub - Security - Obter Alerta de Código",
+      "description": "Obter alerta de escaneamento de código via MCP",
+      "pattern": "/obter alerta( de)? código|get code( scanning)? alert/i",
+      "actions": [
+        {
+          "type": "command",
+          "command": "mcp.invoke",
+          "args": {
+            "provider": "github-mcp",
+            "command": "get_code_scanning_alert"
+          }
+        }
+      ]
+    },
+    {
+      "name": "GitHub - Security - Listar Alertas de Segredos",
+      "description": "Listar alertas de escaneamento de segredos via MCP",
+      "pattern": "/listar alertas( de)? segredos|list secret( scanning)? alerts/i",
+      "actions": [
+        {
+          "type": "command",
+          "command": "mcp.invoke",
+          "args": {
+            "provider": "github-mcp",
+            "command": "list_secret_scanning_alerts"
+          }
+        }
+      ]
+    },
+    {
+      "name": "GitHub - Security - Obter Alerta de Segredo",
+      "description": "Obter alerta de escaneamento de segredo via MCP",
+      "pattern": "/obter alerta( de)? segredo|get secret( scanning)? alert/i",
+      "actions": [
+        {
+          "type": "command",
+          "command": "mcp.invoke",
+          "args": {
+            "provider": "github-mcp",
+            "command": "get_secret_scanning_alert"
+          }
+        }
+      ]
+    },
+    {
+      "name": "GitHub - Commits - Obter Commit",
+      "description": "Obter detalhes de um commit via MCP",
+      "pattern": "/obter commit|get commit/i",
+      "actions": [
+        {
+          "type": "command",
+          "command": "mcp.invoke",
+          "args": {
+            "provider": "github-mcp",
+            "command": "get_commit"
+          }
+        }
+      ]
+    },
+    {
+      "name": "GitHub - Commits - Listar Commits",
+      "description": "Listar commits via MCP",
+      "pattern": "/listar commits|list commits/i",
+      "actions": [
+        {
+          "type": "command",
+          "command": "mcp.invoke",
+          "args": {
+            "provider": "github-mcp",
+            "command": "list_commits"
+          }
+        }
+      ]
+    },
+    {
+      "name": "GitHub - Usuário - Obter Perfil",
+      "description": "Obter informações do usuário autenticado via MCP",
+      "pattern": "/obter (meu )?perfil|get me|get profile/i",
+      "actions": [
+        {
+          "type": "command",
+          "command": "mcp.invoke",
+          "args": {
+            "provider": "github-mcp",
+            "command": "get_me"
+          }
+        }
+      ]
+    },
+    {
+      "name": "MCP - Sincronizar Manualmente",
+      "description": "Sincroniza o Git local quando solicitado",
+      "pattern": "/sincronizar( git)?( local)?|sync( git)?( local)?/i",
+      "actions": [
+        {
+          "type": "command",
+          "command": "terminal.sendText",
+          "args": {
+            "text": "git fetch origin && git reset --hard origin/main"
+          }
+        },
+        {
+          "type": "notify",
+          "message": "Repositório local sincronizado com GitHub"
+        }
+      ]
+    }
+  ],
+  "functions": {
+    "approveCurrentPR": {
+      "code": "async function approveCurrentPR() {\n  // Este é um exemplo de como você poderia implementar uma função personalizada\n  // para aprovar o PR atual no qual você está trabalhando\n  \n  // 1. Obter informações do usuário autenticado\n  const me = await mcp.invoke({\n    provider: 'github-mcp',\n    command: 'get_me'\n  });\n  \n  // 2. Em uma implementação real, você precisaria determinar o repositório atual e o PR\n  // Esta é uma implementação simplificada que requer interação do usuário\n  \n  // Pedir ao usuário os detalhes do PR\n  const owner = prompt('Qual é o proprietário do repositório?');\n  const repo = prompt('Qual é o nome do repositório?');\n  const pullNumber = parseInt(prompt('Qual é o número do PR?'));\n  \n  if (!owner || !repo || isNaN(pullNumber)) {\n    return 'Por favor, forneça informações válidas de proprietário, repositório e número do PR.';\n  }\n  \n  // 3. Aprovar o PR\n  return await mcp.invoke({\n    provider: 'github-mcp',\n    command: 'create_pull_request_review',\n    args: {\n      owner: owner,\n      repo: repo,\n      pullNumber: pullNumber,\n      event: 'APPROVE',\n      body: 'Aprovado via MCP GitHub usando Cursor Rules!'\n    }\n  });\n}"
+    },
+    "pushCurrentChanges": {
+      "code": "async function pushCurrentChanges() {\n  // Esta função detecta arquivos modificados no editor e os envia para o repositório\n  \n  // 1. Obter informações do usuário autenticado\n  const me = await mcp.invoke({\n    provider: 'github-mcp',\n    command: 'get_me'\n  });\n  \n  // 2. Em uma implementação real, você detectaria arquivos modificados\n  // Esta é uma implementação simplificada que requer interação do usuário\n  \n  // Pedir ao usuário os detalhes do repositório\n  const owner = prompt('Qual é o proprietário do repositório?');\n  const repo = prompt('Qual é o nome do repositório?');\n  const branch = prompt('Qual é o nome do branch?') || 'main';\n  const commitMessage = prompt('Qual é a mensagem de commit?') || 'Atualização via MCP';\n  \n  // Pedir ao usuário os arquivos a serem enviados\n  const filesInput = prompt('Informe os arquivos a serem enviados (caminhos separados por vírgula):');\n  \n  if (!owner || !repo || !filesInput) {\n    return 'Por favor, forneça informações válidas de proprietário, repositório e arquivos.';\n  }\n  \n  const filePaths = filesInput.split(',').map(p => p.trim());\n  const files = [];\n  \n  // 3. Para cada arquivo, obter o conteúdo e adicionar ao array\n  for (const path of filePaths) {\n    // Em uma implementação real, obteríamos o conteúdo do arquivo aberto no editor\n    const content = prompt(`Informe o conteúdo para o arquivo ${path}:`);\n    files.push({ path, content });\n  }\n  \n  // 4. Enviar os arquivos para o repositório\n  return await mcp.invoke({\n    provider: 'github-mcp',\n    command: 'push_files',\n    args: {\n      owner,\n      repo,\n      branch,\n      message: commitMessage,\n      files\n    }\n  });\n}"
+    }
+  }
+} 
