@@ -87,3 +87,109 @@ Use MCP for tasks not covered by local Git, such as:
 ---
 
 This README is the default (English) version. For the original Portuguese instructions, see [pt-br-README.md](pt-br-README.md).
+
+## Installation
+
+### Prerequisites
+
+- [Go](https://go.dev/dl/) installed on Windows
+- [Git](https://git-scm.com/download/win) installed
+- [Cursor IDE](https://cursor.sh/) installed
+- [GitHub personal access token](https://github.com/settings/tokens)
+
+### Step-by-step
+
+#### 1. Install github-mcp-server
+
+Create a file named `install_mcp_server.bat` with the following content:
+
+```batch
+@echo off
+set REPO_URL=https://github.com/github/github-mcp-server.git
+echo Creating install directory...
+mkdir C:\MCP\github
+cd C:\MCP\github
+
+echo Cloning GitHub repository...
+git clone %REPO_URL%
+if errorlevel 1 (
+    echo Error cloning repository.
+    exit /b 1
+)
+
+cd github-mcp-server
+echo.
+echo Building MCP Server...
+go build -o mcp-server.exe ./cmd/github-mcp-server
+if errorlevel 1 (
+    echo Error building MCP Server.
+    exit /b 1
+)
+
+echo.
+echo Copying executable to final directory...
+copy mcp-server.exe C:\MCP\github\
+if errorlevel 1 (
+    echo Error copying executable.
+    exit /b 1
+)
+
+echo.
+echo Running MCP Server help...
+C:\MCP\github\mcp-server.exe --help
+if errorlevel 1 (
+    echo Error running MCP Server.
+    exit /b 1
+)
+
+echo.
+echo Installation completed successfully!
+echo The executable was installed at C:\MCP\github\mcp-server.exe
+```
+
+Run this script as administrator in Command Prompt.
+
+#### 2. Create a GitHub personal access token
+
+1. Go to https://github.com/settings/tokens
+2. Click "Generate new token" (Classic)
+3. Name the token (e.g., "Cursor MCP Integration")
+4. Select the required scopes (at least "repo" and "read:user")
+5. Generate and copy the token for later use
+
+#### 3. Configure MCP in Cursor (Global Configuration)
+
+1. Locate the global Cursor config folder:
+   - Windows: `C:\Users\[YourUser]\.cursor`
+2. Create a file named `mcp.json` in this folder (if it doesn't exist)
+3. Add the following configuration:
+
+```json
+{
+  "mcpServers": {
+    "github-mcp": {
+      "command": "C:\\MCP\\github\\mcp-server.exe",
+      "args": ["stdio"],
+      "env": {
+        "GITHUB_PERSONAL_ACCESS_TOKEN": "your_token_here"
+      }
+    }
+  }
+}
+```
+
+4. Replace `your_token_here` with your generated GitHub token
+5. Save the file and restart Cursor
+
+> **Note:** This global config makes the MCP server available in all projects. Alternatively, you can create a project-specific config by placing `mcp.json` in the `.cursor` folder inside your project directory.
+
+#### 4. Verify the configuration
+
+1. In Cursor, you should see a confirmation message that MCP is configured
+2. In Cursor settings (Settings > MCP), the GitHub server should appear in the available tools list
+
+## MCP Server in Cursor IDE
+
+Below is an example of the MCP Server configured in Cursor IDE:
+
+![MCP Server running in Cursor](images/mcp-cursor-demo.png)
