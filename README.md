@@ -3,26 +3,32 @@ A GitHub repository for testing and development with Cursor IDE integration
 
 # Tutorial: Configurando o GitHub MCP Server no Cursor
 
+![MCP Server funcionando no Cursor](https://raw.githubusercontent.com/rolsite/mcp-github-cursor-windows/main/images/mcp-cursor-demo.png)
+
 ## O que é o MCP Server?
 
 O Model Context Protocol (MCP) é um protocolo para estender as capacidades do Cursor permitindo integração com ferramentas externas. O github-mcp-server é a implementação oficial do GitHub para este protocolo.
 
 ## Pré-requisitos
 
-- Go instalado no Windows
-- Git instalado
-- Cursor IDE instalado
-- Token de acesso pessoal do GitHub
+- [Go](https://go.dev/dl/) instalado no Windows
+- [Git](https://git-scm.com/download/win) instalado
+- [Cursor IDE](https://cursor.sh/) instalado
+- [Token de acesso pessoal](https://github.com/settings/tokens) do GitHub
 
 ## Passo a Passo
 
 ### 1. Instalar o github-mcp-server
 
+Primeiro, crie um arquivo chamado `install_mcp_server.bat` em qualquer local do seu computador (por exemplo, na Área de Trabalho) com o seguinte conteúdo:
+
 ```batch
 @echo off
 set REPO_URL=https://github.com/github/github-mcp-server.git
-echo Criando diretório de instalação...
-mkdir C:\MCP\github
+
+echo Verificando e criando diretório de instalação...
+if not exist C:\MCP mkdir C:\MCP
+if not exist C:\MCP\github mkdir C:\MCP\github
 cd C:\MCP\github
 
 echo Clonando o repositório do GitHub...
@@ -60,9 +66,12 @@ if errorlevel 1 (
 echo.
 echo Instalação concluída com sucesso!
 echo O executável foi instalado em C:\MCP\github\mcp-server.exe
+pause
 ```
 
-Salve este script como `install_mcp_server.bat` e execute-o em um Prompt de Comando.
+Em seguida, execute o script com permissões de administrador clicando com o botão direito no arquivo e selecionando "Executar como administrador".
+
+> **Nota**: O script criará automaticamente os diretórios necessários (`C:\MCP\github`) se eles não existirem.
 
 ### 2. Criar um token de acesso pessoal do GitHub
 
@@ -72,13 +81,15 @@ Salve este script como `install_mcp_server.bat` e execute-o em um Prompt de Coma
 4. Selecione os escopos necessários (pelo menos "repo" e "read:user")
 5. Gere o token e copie-o para uso posterior
 
+> **Importante**: Guarde esse token em um local seguro, pois ele não será mostrado novamente.
+
 ### 3. Configurar o MCP no Cursor (Configuração Global)
 
 1. Localize a pasta de configuração global do Cursor:
-   - Windows: `C:\Users\[SeuUsuário]\.cursor`
-   - No seu caso: `C:\Users\Usuario\.cursor`
+   - Windows: `C:\Users\[SeuUsuario]\.cursor` (substitua [SeuUsuario] pelo seu nome de usuário do Windows)
 
 2. Crie um arquivo chamado `mcp.json` dentro desta pasta (se não existir)
+   - Se a pasta `.cursor` não existir, abra o Cursor pelo menos uma vez para que ela seja criada automaticamente
 
 3. Adicione a seguinte configuração:
 
@@ -104,7 +115,7 @@ Salve este script como `install_mcp_server.bat` e execute-o em um Prompt de Coma
 ### 4. Verificar a configuração
 
 1. No Cursor, você deverá ver uma mensagem de confirmação que o MCP está configurado
-2. Nas configurações do Cursor, na seção MCP, o servidor GitHub deve aparecer na lista de ferramentas disponíveis
+2. Nas configurações do Cursor (acesse em Settings > MCP), o servidor GitHub deve aparecer na lista de ferramentas disponíveis, como na imagem no início deste tutorial
 
 ## Solução de Problemas Comuns
 
@@ -121,6 +132,11 @@ Certifique-se de que seu arquivo JSON está completo e corretamente formatado, c
 1. Verifique se o caminho para o executável está correto
 2. Certifique-se de ter incluído o argumento `stdio` 
 3. Confirme se o token do GitHub é válido
+4. Verifique se o Go está instalado corretamente e acessível no PATH
+
+### Erro: "mcp-server.exe não é reconhecido como um comando"
+
+Verifique se o caminho especificado no arquivo `mcp.json` está correto e se o executável foi corretamente gerado pelo script de instalação.
 
 ## Usando o GitHub MCP Server
 
@@ -131,6 +147,8 @@ Agora você pode usar os comandos do GitHub diretamente no Cursor, como:
 - Fazer fork de repositórios
 - Gerenciar branches
 - E muito mais!
+
+Para uma lista completa de funcionalidades, consulte a [documentação oficial do Cursor sobre MCP](https://cursor.sh/docs/mcp).
 
 ---
 
