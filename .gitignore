@@ -1,6 +1,3 @@
-# Ignorar pasta de configuração do Cursor
-.cursor/
-
 # Arquivos de sistema
 .DS_Store
 Thumbs.db
