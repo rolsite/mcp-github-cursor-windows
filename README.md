@@ -199,6 +199,6 @@ A regra de sincronização é configurada como `alwaysApply: true`, garantindo q
 - **Melhor organização**: Regras separadas em arquivos individuais facilitam a manutenção
 - **Formato oficial**: Utiliza o formato mais recente recomendado pela documentação do Cursor
 
-### Importante
+---
 
-A sincronização usa `git reset --hard`, que pode descartar mudanças locais não commitadas. Certifique-se de fazer commit de alterações importantes antes de usar operações MCP.
+Arquivo atualizado via MCP para teste do fluxo de sincronização.
