@@ -1,0 +1,21 @@
+# Ignorar pasta de configuração do Cursor
+.cursor/
+
+# Arquivos de sistema
+.DS_Store
+Thumbs.db
+
+# Arquivos de log
+*.log
+
+# Arquivos de ambiente
+.env
+.env.local
+
+# Diretórios de dependências
+node_modules/
+vendor/
+
+# Arquivos de build
+build/
+dist/ 

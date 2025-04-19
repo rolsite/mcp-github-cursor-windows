@@ -117,6 +117,70 @@ Em seguida, execute o script com permissões de administrador clicando com o bot
 1. No Cursor, você deverá ver uma mensagem de confirmação que o MCP está configurado
 2. Nas configurações do Cursor (acesse em Settings > MCP), o servidor GitHub deve aparecer na lista de ferramentas disponíveis, como na imagem no início deste tutorial
 
+### 5. Configurando Cursor Rules para priorizar o MCP
+
+Para usar o MCP GitHub preferencialmente em vez dos comandos Git diretos, você pode configurar regras no Cursor. Crie um arquivo `rules.json` na pasta `.cursor` do seu projeto com o seguinte conteúdo:
+
+```json
+{
+  "rules": [
+    {
+      "name": "GitHub - Commit",
+      "description": "Usar MCP para commit",
+      "pattern": "/git commit/i",
+      "actions": [
+        {
+          "type": "suggest",
+          "label": "Usar MCP GitHub",
+          "message": "Recomendo usar o MCP GitHub para commits. Posso ajudar com isso?"
+        }
+      ]
+    },
+    {
+      "name": "GitHub - Push",
+      "description": "Usar MCP para push",
+      "pattern": "/git push/i",
+      "actions": [
+        {
+          "type": "suggest",
+          "label": "Usar MCP GitHub",
+          "message": "Você pode usar o MCP GitHub para fazer push. Quer que eu faça isso com MCP?"
+        }
+      ]
+    },
+    {
+      "name": "GitHub - Pull Request",
+      "description": "Criar PRs via MCP",
+      "pattern": "/pull request|pr|merge/i",
+      "actions": [
+        {
+          "type": "command",
+          "command": "mcp.invoke",
+          "args": {
+            "provider": "github-mcp",
+            "command": "create_pull_request"
+          }
+        }
+      ]
+    }
+  ]
+}
+```
+
+> **Importante**: Para evitar que este arquivo de configuração seja enviado ao seu repositório, adicione `.cursor/` ao seu arquivo `.gitignore`.
+
+Exemplo de `.gitignore`:
+```
+# Ignorar pasta de configuração do Cursor
+.cursor/
+```
+
+Com estas regras configuradas, o Cursor vai automaticamente:
+- Sugerir o uso do MCP GitHub quando você tentar fazer commits ou pushes
+- Iniciar automaticamente o fluxo de criação de PR via MCP quando você mencionar pull requests
+
+Você pode personalizar as regras conforme suas necessidades e adicionar mais comandos MCP como fallbacks.
+
 ## Solução de Problemas Comuns
 
 ### Erro: "mcpServers must be an object"
