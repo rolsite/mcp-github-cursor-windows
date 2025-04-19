@@ -1,204 +1,89 @@
 # mcp-github-cursor-windows
 A GitHub repository for testing and development with Cursor IDE integration
 
-# Tutorial: Configurando o GitHub MCP Server no Cursor
+## English Version (Default)
 
-![MCP Server funcionando no Cursor](https://raw.githubusercontent.com/rolsite/mcp-github-cursor-windows/main/images/mcp-cursor-demo.png)
+This project demonstrates how to integrate the GitHub MCP Server with Cursor IDE on Windows.
 
-## O que é o MCP Server?
+- [Setup instructions](#setup)
+- [How MCP works](#how-mcp-works)
+- [Usage: Git vs MCP](#usage-git-vs-mcp)
+- [Natural Language Commands](#natural-language-commands)
+- [Common issues](#common-issues)
+- [Cursor Rules for MCP](#cursor-rules)
 
-O Model Context Protocol (MCP) é um protocolo para estender as capacidades do Cursor permitindo integração com ferramentas externas. O github-mcp-server é a implementação oficial do GitHub para este protocolo.
-
-## Pré-requisitos
-
-- [Go](https://go.dev/dl/) instalado no Windows
-- [Git](https://git-scm.com/download/win) instalado
-- [Cursor IDE](https://cursor.sh/) instalado
-- [Token de acesso pessoal](https://github.com/settings/tokens) do GitHub
-
-## Passo a Passo
-
-### 1. Instalar o github-mcp-server
-
-Primeiro, crie um arquivo chamado `install_mcp_server.bat` em qualquer local do seu computador (por exemplo, na Área de Trabalho) com o seguinte conteúdo:
-
-```batch
-@echo off
-set REPO_URL=https://github.com/github/github-mcp-server.git
-
-echo Verificando e criando diretório de instalação...
-if not exist C:\MCP mkdir C:\MCP
-if not exist C:\MCP\github mkdir C:\MCP\github
-cd C:\MCP\github
-
-echo Clonando o repositório do GitHub...
-git clone %REPO_URL%
-if errorlevel 1 (
-    echo Erro ao clonar o repositório.
-    exit /b 1
-)
-
-cd github-mcp-server
-echo.
-echo Compilando o MCP Server...
-go build -o mcp-server.exe ./cmd/github-mcp-server
-if errorlevel 1 (
-    echo Erro ao compilar o MCP Server.
-    exit /b 1
-)
-
-echo.
-echo Copiando executável para o diretório final...
-copy mcp-server.exe C:\MCP\github\
-if errorlevel 1 (
-    echo Erro ao copiar o executável.
-    exit /b 1
-)
-
-echo.
-echo Execução de teste do MCP Server (exibindo ajuda)...
-C:\MCP\github\mcp-server.exe --help
-if errorlevel 1 (
-    echo Erro ao executar o MCP Server.
-    exit /b 1
-)
-
-echo.
-echo Instalação concluída com sucesso!
-echo O executável foi instalado em C:\MCP\github\mcp-server.exe
-pause
-```
-
-Em seguida, execute o script com permissões de administrador clicando com o botão direito no arquivo e selecionando "Executar como administrador".
-
-> **Nota**: O script criará automaticamente os diretórios necessários (`C:\MCP\github`) se eles não existirem.
-
-### 2. Criar um token de acesso pessoal do GitHub
-
-1. Acesse https://github.com/settings/tokens
-2. Clique em "Generate new token" (Classic)
-3. Dê um nome ao token (ex: "Cursor MCP Integration")
-4. Selecione os escopos necessários (pelo menos "repo" e "read:user")
-5. Gere o token e copie-o para uso posterior
-
-> **Importante**: Guarde esse token em um local seguro, pois ele não será mostrado novamente.
-
-### 3. Configurar o MCP no Cursor (Configuração Global)
-
-1. Localize a pasta de configuração global do Cursor:
-   - Windows: `C:\Users\[SeuUsuario]\.cursor` (substitua [SeuUsuario] pelo seu nome de usuário do Windows)
-
-2. Crie um arquivo chamado `mcp.json` dentro desta pasta (se não existir)
-   - Se a pasta `.cursor` não existir, abra o Cursor pelo menos uma vez para que ela seja criada automaticamente
-
-3. Adicione a seguinte configuração:
-
-```json
-{
-  "mcpServers": {
-    "github-mcp": {
-      "command": "C:\\MCP\\github\\mcp-server.exe",
-      "args": ["stdio"],
-      "env": {
-        "GITHUB_PERSONAL_ACCESS_TOKEN": "seu_token_aqui"
-      }
-    }
-  }
-}
-```
-
-4. Substitua `seu_token_aqui` pelo token que você gerou no GitHub
-5. Salve o arquivo e reinicie o Cursor
-
-> **Nota**: Esta configuração global torna o MCP server disponível em todos os projetos. Alternativamente, você pode criar uma configuração específica por projeto colocando o arquivo `mcp.json` na pasta `.cursor` dentro do diretório do projeto.
-
-### 4. Verificar a configuração
-
-1. No Cursor, você deverá ver uma mensagem de confirmação que o MCP está configurado
-2. Nas configurações do Cursor (acesse em Settings > MCP), o servidor GitHub deve aparecer na lista de ferramentas disponíveis, como na imagem no início deste tutorial
-
-### 5. Configurando Cursor Rules para MCP GitHub
-
-Para usar o MCP GitHub preferencialmente, configuramos regras MDC no Cursor. Estas regras estão localizadas na pasta `.cursor/rules/` do projeto e utilizam o formato mais recente recomendado pela documentação.
-
-Exemplos de regras que implementamos:
-
-1. **Sincronização Automática** (`mcp-sync.mdc`):
-   - Sincroniza o Git local após operações MCP
-   - Mantém o Cursor sempre atualizado com as mudanças remotas
-
-2. **Comandos MCP** (`mcp-commands.mdc`):
-   - Define comportamentos para operações de arquivos, PRs e issues
-   - Fornece assistência consistente para interações com GitHub
-
-3. **Operações de Repositório** (`mcp-repository.mdc`):
-   - Ajuda com criação de repositórios, branches e operações relacionadas
-   - Padroniza o uso de comandos MCP para repositórios
-
-Você pode examinar estas regras na pasta `.cursor/rules/` e adicionar suas próprias conforme necessário.
-
-> **Importante**: Este projeto inclui as regras Cursor no repositório para garantir consistência de experiência entre todos os colaboradores.
-
-## Solução de Problemas Comuns
-
-### Erro: "mcpServers must be an object"
-
-Verifique se a estrutura do seu arquivo JSON está correta. O campo `mcpServers` deve ser um objeto (entre chaves `{}`), não um array.
-
-### Erro: "JSON syntax error: Unexpected end of JSON input"
-
-Certifique-se de que seu arquivo JSON está completo e corretamente formatado, com todas as chaves e colchetes fechados.
-
-### Erro: "failed to create client"
-
-1. Verifique se o caminho para o executável está correto
-2. Certifique-se de ter incluído o argumento `stdio` 
-3. Confirme se o token do GitHub é válido
-4. Verifique se o Go está instalado corretamente e acessível no PATH
-
-### Erro: "mcp-server.exe não é reconhecido como um comando"
-
-Verifique se o caminho especificado no arquivo `mcp.json` está correto e se o executável foi corretamente gerado pelo script de instalação.
-
-## Usando o GitHub MCP Server
-
-Agora você pode usar os comandos do GitHub diretamente no Cursor, como:
-
-- Criar pull requests
-- Visualizar arquivos de repositórios
-- Fazer fork de repositórios
-- Gerenciar branches
-- E muito mais!
-
-Para uma lista completa de funcionalidades, consulte a [documentação oficial do Cursor sobre MCP](https://cursor.sh/docs/mcp).
+## [Versão em Português Brasileiro](pt-br-README.md)
 
 ---
 
-Com esta configuração, o Cursor pode interagir diretamente com o GitHub, permitindo uma experiência de desenvolvimento mais integrada e eficiente.
+## Setup
 
-## Nota de Atualização
+1. **Install Go, Git, and Cursor IDE**
+2. **Clone and build the github-mcp-server**
+3. **Create a GitHub personal access token**
+4. **Configure MCP in Cursor (global or per project)**
+5. **Add your token to the configuration**
 
-Este documento foi atualizado diretamente usando o MCP GitHub, demonstrando a capacidade de fazer alterações em arquivos e enviá-las ao repositório sem precisar usar comandos Git tradicionais!
+## How MCP works
 
-## Nota sobre MCP e Git Local
+- MCP (Model Context Protocol) allows Cursor to interact directly with GitHub, bypassing local git commands for advanced GitHub features.
+- All MCP operations are executed via natural language commands and are reflected immediately on the remote repository.
+- Local Git is still used for all standard version control operations.
 
-Para sincronizar automaticamente o Git local com as operações MCP, este projeto implementa uma regra MDC de sincronização em `.cursor/rules/mcp-sync.mdc`.
+## Usage: Git vs MCP
 
-### Como funciona
+### What the local Git does (standard workflow)
+Use the integrated Git for all standard version control operations:
+- Local commit (`git commit`)
+- Branch creation and switching (`git branch`, `git checkout`)
+- Merge, rebase, cherry-pick (`git merge`, `git rebase`, `git cherry-pick`)
+- Push and pull (`git push`, `git pull`)
+- Conflict resolution
+- History and log (`git log`)
+- Stash, reset, checkout, etc.
 
-A regra de sincronização é configurada como `alwaysApply: true`, garantindo que seja sempre aplicada durante as interações com o Cursor AI. Quando você executa operações MCP que modificam o repositório remoto, o Cursor AI automaticamente:
+**Example command:**
+- `git commit -m "my message"`
+- `git push`
+- `git checkout feature/login`
 
-1. Reconhece que uma operação MCP foi realizada
-2. Executa comandos de sincronização Git localmente
-3. Mantém o status do Git no Cursor atualizado
+> These commands are run in your terminal or via the Source Control panel in your editor.
 
-### Vantagens da abordagem MDC
+### What the MCP does (advanced GitHub integration)
+Use MCP for tasks not covered by local Git, such as:
+- Creating, listing, or managing GitHub issues directly from the editor
+- Creating, listing, or managing pull requests (PRs) directly from the editor
+- Commenting, reviewing, and approving PRs in-editor
+- Managing labels, milestones, and assignees for issues/PRs
+- Viewing and interacting with security/code scanning/secret scanning alerts
+- Administrative repository operations (fork, create repo, configure integrations)
+- Automating GitHub Actions workflows
 
-- **Regras mais declarativas**: O formato MDC é mais limpo e fácil de entender
-- **Separação por domínio**: Cada regra foca em um aspecto específico (sincronização, comandos, etc.)
-- **Melhor organização**: Regras separadas em arquivos individuais facilitam a manutenção
-- **Formato oficial**: Utiliza o formato mais recente recomendado pela documentação do Cursor
+**Example natural language commands:**
+- "Create a new issue titled 'Bug in login page'"
+- "List all open pull requests"
+- "Approve pull request #42"
+- "Assign the label 'urgent' to issue #10"
+- "Fork this repository"
+
+> These commands are written in natural language and executed by the MCP integration in Cursor. The corresponding GitHub API operation is triggered automatically.
+
+## Natural Language Commands
+
+- MCP enables you to use natural language for advanced GitHub operations. See `.cursor/rules/mcp-commands.mdc` for English and `.cursor/rules/mcp-commands-ptbr.mdc` for Portuguese examples.
+- For standard versioning, continue using Git commands as usual.
+
+## Common Issues
+
+- **Local files out of sync:** Always run `git fetch` and `git reset --hard origin/main` after MCP operations that change the remote repository.
+- **Token errors:** Make sure your GitHub token is valid and has the correct scopes.
+- **MCP server not found:** Check your configuration paths and that the server is built.
+
+## Cursor Rules for MCP
+
+- See `.cursor/rules/mcp-integration.mdc` for when to use Git vs MCP.
+- See `.cursor/rules/mcp-commands.mdc` and `.cursor/rules/mcp-commands-ptbr.mdc` for natural language command examples.
 
 ---
 
-Arquivo atualizado via MCP para teste do fluxo de sincronização.
+This README is the default (English) version. For the original Portuguese instructions, see [pt-br-README.md](pt-br-README.md).

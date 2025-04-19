@@ -1,0 +1,28 @@
+---
+description: 
+globs: 
+alwaysApply: true
+---
+# Comandos Git em linguagem natural para MCP (Português Brasileiro)
+
+Você pode usar frases em linguagem natural para executar operações avançadas do GitHub via MCP. Exemplos comuns:
+
+- "Crie uma nova issue com o título 'Bug na tela de login'"
+- "Liste todas as issues abertas"
+- "Feche a issue #12"
+- "Abra um pull request de feature/login para main"
+- "Liste todos os pull requests abertos"
+- "Faça merge do pull request #42"
+- "Aprove o pull request #42"
+- "Adicione um comentário ao pull request #42: Está ótimo!"
+- "Adicione o label 'urgente' à issue #10"
+- "Atribua a issue #10 para @usuario"
+- "Defina o milestone 'v1.0' para o pull request #42"
+- "Liste todos os alertas de segurança"
+- "Descarte o alerta de secret scanning #5"
+- "Forke este repositório"
+- "Crie um novo repositório chamado 'meu-novo-repo'"
+- "Liste todos os workflows do GitHub Actions"
+- "Reexecute o workflow #7"
+
+> Todos os demais comandos de versionamento (commit, branch, merge, push, pull, etc.) devem continuar sendo realizados usando comandos Git locais. O MCP é usado apenas para operações avançadas do GitHub que vão além do controle de versão padrão.
