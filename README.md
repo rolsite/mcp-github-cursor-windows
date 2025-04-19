@@ -117,69 +117,27 @@ Em seguida, execute o script com permissões de administrador clicando com o bot
 1. No Cursor, você deverá ver uma mensagem de confirmação que o MCP está configurado
 2. Nas configurações do Cursor (acesse em Settings > MCP), o servidor GitHub deve aparecer na lista de ferramentas disponíveis, como na imagem no início deste tutorial
 
-### 5. Configurando Cursor Rules para priorizar o MCP
+### 5. Configurando Cursor Rules para MCP GitHub
 
-Para usar o MCP GitHub preferencialmente em vez dos comandos Git diretos, você pode configurar regras no Cursor. Crie um arquivo `rules.json` na pasta `.cursor` do seu projeto com o seguinte conteúdo:
+Para usar o MCP GitHub preferencialmente, configuramos regras MDC no Cursor. Estas regras estão localizadas na pasta `.cursor/rules/` do projeto e utilizam o formato mais recente recomendado pela documentação.
 
-```json
-{
-  "rules": [
-    {
-      "name": "GitHub - Commit",
-      "description": "Usar MCP para commit",
-      "pattern": "/git commit/i",
-      "actions": [
-        {
-          "type": "suggest",
-          "label": "Usar MCP GitHub",
-          "message": "Recomendo usar o MCP GitHub para commits. Posso ajudar com isso?"
-        }
-      ]
-    },
-    {
-      "name": "GitHub - Push",
-      "description": "Usar MCP para push",
-      "pattern": "/git push/i",
-      "actions": [
-        {
-          "type": "suggest",
-          "label": "Usar MCP GitHub",
-          "message": "Você pode usar o MCP GitHub para fazer push. Quer que eu faça isso com MCP?"
-        }
-      ]
-    },
-    {
-      "name": "GitHub - Pull Request",
-      "description": "Criar PRs via MCP",
-      "pattern": "/pull request|pr|merge/i",
-      "actions": [
-        {
-          "type": "command",
-          "command": "mcp.invoke",
-          "args": {
-            "provider": "github-mcp",
-            "command": "create_pull_request"
-          }
-        }
-      ]
-    }
-  ]
-}
-```
+Exemplos de regras que implementamos:
 
-> **Importante**: Para evitar que este arquivo de configuração seja enviado ao seu repositório, adicione `.cursor/` ao seu arquivo `.gitignore`.
+1. **Sincronização Automática** (`mcp-sync.mdc`):
+   - Sincroniza o Git local após operações MCP
+   - Mantém o Cursor sempre atualizado com as mudanças remotas
 
-Exemplo de `.gitignore`:
-```
-# Ignorar pasta de configuração do Cursor
-.cursor/
-```
+2. **Comandos MCP** (`mcp-commands.mdc`):
+   - Define comportamentos para operações de arquivos, PRs e issues
+   - Fornece assistência consistente para interações com GitHub
 
-Com estas regras configuradas, o Cursor vai automaticamente:
-- Sugerir o uso do MCP GitHub quando você tentar fazer commits ou pushes
-- Iniciar automaticamente o fluxo de criação de PR via MCP quando você mencionar pull requests
+3. **Operações de Repositório** (`mcp-repository.mdc`):
+   - Ajuda com criação de repositórios, branches e operações relacionadas
+   - Padroniza o uso de comandos MCP para repositórios
 
-Você pode personalizar as regras conforme suas necessidades e adicionar mais comandos MCP como fallbacks.
+Você pode examinar estas regras na pasta `.cursor/rules/` e adicionar suas próprias conforme necessário.
+
+> **Importante**: Este projeto inclui as regras Cursor no repositório para garantir consistência de experiência entre todos os colaboradores.
 
 ## Solução de Problemas Comuns
 
@@ -224,26 +182,23 @@ Este documento foi atualizado diretamente usando o MCP GitHub, demonstrando a ca
 
 ## Nota sobre MCP e Git Local
 
-Para usar o MCP GitHub no Cursor e manter o Git local atualizado automaticamente, este projeto implementa sincronização automática usando Cursor Rules:
+Para sincronizar automaticamente o Git local com as operações MCP, este projeto implementa uma regra MDC de sincronização em `.cursor/rules/mcp-sync.mdc`.
 
 ### Como funciona
 
-1. **Sincronização Automática**: 
-   - Quando qualquer comando MCP é detectado, o Git local é automaticamente sincronizado
-   - Um comando `git fetch origin && git reset --hard origin/main` é executado após operações MCP
-   - Você verá uma notificação confirmando a sincronização
+A regra de sincronização é configurada como `alwaysApply: true`, garantindo que seja sempre aplicada durante as interações com o Cursor AI. Quando você executa operações MCP que modificam o repositório remoto, o Cursor AI automaticamente:
 
-2. **Comandos Específicos com Sincronização**:
-   - Alguns comandos como `create_or_update_file` e `push_files` têm sincronização integrada
-   - Após uma pequena espera para conclusão da operação, o Git local é sincronizado
+1. Reconhece que uma operação MCP foi realizada
+2. Executa comandos de sincronização Git localmente
+3. Mantém o status do Git no Cursor atualizado
 
-3. **Sincronização Manual**:
-   - Se necessário, digite "sincronizar git" ou "sync git" para forçar a sincronização
+### Vantagens da abordagem MDC
 
-### Benefícios
+- **Regras mais declarativas**: O formato MDC é mais limpo e fácil de entender
+- **Separação por domínio**: Cada regra foca em um aspecto específico (sincronização, comandos, etc.)
+- **Melhor organização**: Regras separadas em arquivos individuais facilitam a manutenção
+- **Formato oficial**: Utiliza o formato mais recente recomendado pela documentação do Cursor
 
-- Use sempre o MCP para operações do GitHub
-- O Cursor manterá o status do Git atualizado automaticamente
-- Não é necessário lembrar de comandos Git adicionais
+### Importante
 
-> **Nota**: A sincronização usa `git reset --hard`, que descarta qualquer mudança local não commitada. Certifique-se de ter feito commit de todas as mudanças importantes antes de usar operações MCP.
+A sincronização usa `git reset --hard`, que pode descartar mudanças locais não commitadas. Certifique-se de fazer commit de alterações importantes antes de usar operações MCP.
