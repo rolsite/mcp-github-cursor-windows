@@ -217,3 +217,7 @@ Para uma lista completa de funcionalidades, consulte a [documentação oficial d
 ---
 
 Com esta configuração, o Cursor pode interagir diretamente com o GitHub, permitindo uma experiência de desenvolvimento mais integrada e eficiente.
+
+## Nota de Atualização
+
+Este documento foi atualizado diretamente usando o MCP GitHub, demonstrando a capacidade de fazer alterações em arquivos e enviá-las ao repositório sem precisar usar comandos Git tradicionais!
