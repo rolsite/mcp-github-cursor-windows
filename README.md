@@ -221,3 +221,18 @@ Com esta configuração, o Cursor pode interagir diretamente com o GitHub, permi
 ## Nota de Atualização
 
 Este documento foi atualizado diretamente usando o MCP GitHub, demonstrando a capacidade de fazer alterações em arquivos e enviá-las ao repositório sem precisar usar comandos Git tradicionais!
+
+## Nota sobre MCP e Git Local
+
+Ao usar o MCP GitHub no Cursor, é importante entender a interação com o Git local:
+
+1. **Para operações do GitHub** (PRs, Issues, etc):
+   - Use os comandos MCP diretamente
+   - Exemplo: Criar PR, gerenciar issues, etc.
+
+2. **Para alterações em arquivos**:
+   - Faça as alterações localmente
+   - Use `git add` e `git commit` normalmente
+   - Use MCP ou Git para push
+
+Isso garante que o Cursor mantenha o status do Git sempre atualizado.
