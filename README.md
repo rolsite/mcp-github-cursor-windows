@@ -223,7 +223,6 @@ See `.cursor/rules/mcp-commands-ptbr.mdc` for Portuguese language commands.
 ## 📚 Resources
 
 - **Configuration Files:**
-  - `.cursor/rules/mcp-integration.mdc`: When to use Git vs MCP
   - `.cursor/rules/mcp-commands.mdc`: English command examples
   - `.cursor/rules/mcp-commands-ptbr.mdc`: Portuguese command examples
 

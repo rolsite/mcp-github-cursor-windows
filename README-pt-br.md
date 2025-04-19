@@ -223,7 +223,6 @@ Veja `.cursor/rules/mcp-commands.mdc` para comandos em inglês.
 ## 📚 Recursos
 
 - **Arquivos de Configuração:**
-  - `.cursor/rules/mcp-integration.mdc`: Quando usar Git vs MCP
   - `.cursor/rules/mcp-commands.mdc`: Exemplos de comandos em inglês
   - `.cursor/rules/mcp-commands-ptbr.mdc`: Exemplos de comandos em português
 
