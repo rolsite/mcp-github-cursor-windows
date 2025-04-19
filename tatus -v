@@ -1,9 +1,0 @@
-[33mcommit ef286f436d0bafc226ba7c7255a02923c14af52b[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m)[m
-Author: rolsite <rolsite@gmail.com>
-Date:   Sat Apr 19 11:28:44 2025 -0400
-
-    docs: adiciona configuração do Cursor Rules e .gitignore
-
- .gitignore | 21 [32m+++++++++++++++++++++[m
- README.md  | 64 [32m++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++[m
- 2 files changed, 85 insertions(+)
