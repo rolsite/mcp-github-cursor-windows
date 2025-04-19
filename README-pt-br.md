@@ -1,22 +1,37 @@
-# mcp-github-cursor-windows
-Repositório de testes e desenvolvimento para integração do Cursor IDE com o GitHub MCP Server no Windows.
+# 🚀 Integração MCP GitHub para Cursor IDE (Windows)
 
-## Versão em Português Brasileiro (Padrão)
+<div align="center">
+  
+![Integração MCP GitHub](images/mcp-cursor-demo.png)
 
-Este projeto demonstra como integrar o GitHub MCP Server ao Cursor IDE no Windows.
+**Integre operações do GitHub perfeitamente no Cursor IDE no Windows**
 
-- [Instruções de instalação](#instalação)
-- [Como funciona o MCP](#como-funciona-o-mcp)
-- [Uso: Git x MCP](#uso-git-x-mcp)
-- [Comandos em linguagem natural](#comandos-em-linguagem-natural)
-- [Problemas comuns](#solução-de-problemas-comuns)
-- [Regras Cursor para MCP](#regras-cursor-para-mcp)
+[Instalação](#-instalação) • 
+[Como Funciona](#-como-funciona) • 
+[Guia de Uso](#-guia-de-uso) • 
+[Comandos](#-comandos-em-linguagem-natural) • 
+[Solução de Problemas](#-solução-de-problemas) • 
+[Recursos](#-recursos)
 
-## [English version](README.md)
+*[English Version](README.md)*
+
+</div>
 
 ---
 
-## Instalação
+## 📋 Visão Geral
+
+Este projeto demonstra como integrar o GitHub MCP (Model Context Protocol) Server com o Cursor IDE no Windows, permitindo realizar operações avançadas do GitHub diretamente do seu editor usando comandos em linguagem natural.
+
+**Principais Benefícios:**
+- Crie e gerencie issues e pull requests sem sair do seu IDE
+- Revise, comente e aprove PRs diretamente no seu fluxo de trabalho
+- Gerencie recursos do repositório GitHub de forma contínua
+- Automatize fluxos de trabalho do GitHub Actions com comandos simples
+
+---
+
+## 🔧 Instalação
 
 ### Pré-requisitos
 
@@ -27,7 +42,8 @@ Este projeto demonstra como integrar o GitHub MCP Server ao Cursor IDE no Window
 
 ### Passo a Passo
 
-#### 1. Instalar o github-mcp-server
+<details>
+<summary><b>1. Instalar o github-mcp-server</b></summary>
 
 Crie um arquivo chamado `install_mcp_server.bat` com o seguinte conteúdo:
 
@@ -76,16 +92,20 @@ echo O executável foi instalado em C:\MCP\github\mcp-server.exe
 ```
 
 Execute este script como administrador no Prompt de Comando.
+</details>
 
-#### 2. Criar um token de acesso pessoal do GitHub
+<details>
+<summary><b>2. Criar um token de acesso pessoal do GitHub</b></summary>
 
 1. Acesse https://github.com/settings/tokens
 2. Clique em "Generate new token" (Classic)
 3. Dê um nome ao token (ex: "Cursor MCP Integration")
 4. Selecione os escopos necessários (pelo menos "repo" e "read:user")
 5. Gere o token e copie-o para uso posterior
+</details>
 
-#### 3. Configurar o MCP no Cursor (Configuração Global)
+<details>
+<summary><b>3. Configurar o MCP no Cursor</b></summary>
 
 1. Localize a pasta de configuração global do Cursor:
    - Windows: `C:\Users\[SeuUsuario]\.cursor`
@@ -110,80 +130,111 @@ Execute este script como administrador no Prompt de Comando.
 5. Salve o arquivo e reinicie o Cursor
 
 > **Nota:** Esta configuração global torna o MCP server disponível em todos os projetos. Alternativamente, você pode criar uma configuração específica por projeto colocando o arquivo `mcp.json` na pasta `.cursor` dentro do diretório do projeto.
+</details>
 
-#### 4. Verificar a configuração
+<details>
+<summary><b>4. Verificar a configuração</b></summary>
 
 1. No Cursor, você deverá ver uma mensagem de confirmação que o MCP está configurado
 2. Nas configurações do Cursor (Configurações > MCP), o servidor GitHub deve aparecer na lista de ferramentas disponíveis
-
-## MCP Server no Cursor IDE
-
-Abaixo, um exemplo do MCP Server configurado no Cursor IDE:
-
-![MCP Server funcionando no Cursor](images/mcp-cursor-demo.png)
+</details>
 
 ---
 
-## Como funciona o MCP
+## 🔄 Como Funciona
 
-- O MCP (Model Context Protocol) permite que o Cursor interaja diretamente com o GitHub, indo além dos comandos Git locais para recursos avançados do GitHub.
-- Todas as operações do MCP são executadas via comandos em linguagem natural e refletem imediatamente no repositório remoto.
-- O Git local continua sendo usado para todas as operações normais de versionamento.
+O MCP (Model Context Protocol) permite que seu IDE se comunique diretamente com o GitHub de uma maneira que vai além das operações Git padrão:
 
-## Uso: Git x MCP
+- **Integração Direta com API:** O MCP se comunica com a API do GitHub para realizar ações que normalmente exigiriam a interface web
+- **Processamento de Linguagem Natural:** Os comandos são interpretados e executados com base em instruções em linguagem comum
+- **Reflexo Imediato no Repositório Remoto:** Todas as operações são executadas diretamente no repositório remoto em tempo real
+- **Complementar ao Git:** O controle de versão padrão ainda usa o Git local para desempenho ideal
 
-### O que o Git local faz (fluxo padrão)
-Use o Git integrado para todas as operações normais de versionamento:
-- Commit local (`git commit`)
-- Criação e troca de branches (`git branch`, `git checkout`)
-- Merge, rebase, cherry-pick (`git merge`, `git rebase`, `git cherry-pick`)
-- Push e pull (`git push`, `git pull`)
-- Resolução de conflitos
-- Histórico e log (`git log`)
-- Stash, reset, checkout, etc.
+---
 
-**Exemplo de comando:**
-- `git commit -m "minha mensagem"`
-- `git push`
-- `git checkout feature/login`
+## 📘 Guia de Uso
 
-> Esses comandos são executados no terminal ou pelo painel de controle de código-fonte do editor.
+### Fluxo Local Git (Operações Padrão)
 
-### O que o MCP faz (integração avançada com o GitHub)
-Use o MCP para tarefas que o Git local não cobre, como:
-- Criar, listar ou gerenciar issues do GitHub diretamente pelo editor
-- Criar, listar ou gerenciar pull requests (PRs) diretamente pelo editor
-- Comentar, revisar e aprovar PRs sem sair do ambiente
-- Gerenciar labels, milestones e responsáveis de issues/PRs
-- Visualizar e interagir com alertas de segurança, code scanning e secret scanning
-- Operações administrativas do repositório (forkar, criar repositório, configurar integrações)
-- Automatizar fluxos de trabalho do GitHub Actions
+Use o Git padrão para todas as operações de controle de versão local:
 
-**Exemplos de comandos em linguagem natural:**
+| Operação | Comando Git | Descrição |
+|-----------|------------|-------------|
+| Commits | `git commit -m "mensagem"` | Registrar alterações no repositório |
+| Branches | `git branch`, `git checkout` | Criar e alternar entre branches |
+| Histórico | `git log` | Visualizar histórico de commits |
+| Mesclagem | `git merge`, `git rebase` | Combinar alterações de branches |
+| Sincronização | `git push`, `git pull` | Sincronizar com repositório remoto |
+
+> Estes comandos são executados no terminal ou pelo painel de Controle de Código no Cursor IDE.
+
+### Fluxo MCP (Recursos Avançados do GitHub)
+
+Use o MCP para operações específicas do GitHub através de linguagem natural:
+
+| Operação | Exemplo de Comando MCP | Equivalente no GitHub |
+|-----------|---------------------|-------------------|
+| Issues | "Crie uma nova issue com título 'Bug na página de login'" | Criar issue pela UI do GitHub |
+| Pull Requests | "Abra um pull request de feature/login para main" | Abrir PR no site do GitHub |
+| Revisões | "Aprove o pull request #42" | Revisar PR no site do GitHub |
+| Labels | "Adicione o label 'urgente' à issue #10" | Gerenciar labels pela UI do GitHub |
+| Repositório | "Forke este repositório" | Operações de repositório no GitHub |
+
+> Estes comandos são escritos em linguagem natural diretamente no Cursor IDE.
+
+---
+
+## 💬 Comandos em Linguagem Natural
+
+O MCP aceita comandos em português e inglês. Aqui estão alguns exemplos:
+
+### Comandos em Português
+
 - "Crie uma nova issue com o título 'Bug na tela de login'"
+- "Liste todas as issues abertas"
+- "Feche a issue #12"
+- "Abra um pull request de feature/login para main"
 - "Liste todos os pull requests abertos"
+- "Faça merge do pull request #42"
 - "Aprove o pull request #42"
+- "Adicione um comentário ao pull request #42: Está ótimo!"
 - "Adicione o label 'urgente' à issue #10"
-- "Forke este repositório"
+- "Atribua a issue #10 para @usuario"
 
-> Esses comandos são escritos em linguagem natural e executados pela integração MCP no Cursor. A operação correspondente da API do GitHub é acionada automaticamente.
+Para referência completa de comandos, veja `.cursor/rules/mcp-commands-ptbr.mdc`.
 
-## Comandos em linguagem natural
+### Comandos em Inglês
 
-- O MCP permite usar linguagem natural para operações avançadas do GitHub. Veja exemplos em `.cursor/rules/mcp-commands-ptbr.mdc` (português) e `.cursor/rules/mcp-commands.mdc` (inglês).
-- Para versionamento padrão, continue usando os comandos Git normalmente.
-
-## Solução de Problemas Comuns
-
-- **Arquivos locais desatualizados:** Sempre execute `git fetch` e `git reset --hard origin/main` após operações MCP que alterem o repositório remoto.
-- **Erros de token:** Certifique-se de que seu token do GitHub é válido e possui os escopos corretos.
-- **MCP server não encontrado:** Verifique os caminhos de configuração e se o servidor está compilado.
-
-## Regras Cursor para MCP
-
-- Veja `.cursor/rules/mcp-integration.mdc` para saber quando usar Git ou MCP.
-- Veja `.cursor/rules/mcp-commands-ptbr.mdc` e `.cursor/rules/mcp-commands.mdc` para exemplos de comandos em linguagem natural.
+Veja `.cursor/rules/mcp-commands.mdc` para comandos em inglês.
 
 ---
 
-Este README é a versão em português brasileiro. Para a versão em inglês, veja [README.md](README.md). 
+## ❓ Solução de Problemas
+
+| Problema | Solução |
+|---------|----------|
+| **Arquivos locais desatualizados** | Execute `git fetch` e `git reset --hard origin/main` após operações do MCP |
+| **Erros de token** | Verifique a validade do token e os escopos nas configurações do GitHub |
+| **MCP server não encontrado** | Verifique os caminhos na configuração e a instalação do servidor |
+| **Comando não reconhecido** | Consulte a referência de comandos e garanta a fraseologia adequada |
+
+---
+
+## 📚 Recursos
+
+- **Arquivos de Configuração:**
+  - `.cursor/rules/mcp-integration.mdc`: Quando usar Git vs MCP
+  - `.cursor/rules/mcp-commands.mdc`: Exemplos de comandos em inglês
+  - `.cursor/rules/mcp-commands-ptbr.mdc`: Exemplos de comandos em português
+
+- **Recursos Externos:**
+  - [Documentação da API do GitHub](https://docs.github.com/pt/rest)
+  - [Documentação do Cursor IDE](https://cursor.sh/docs)
+
+---
+
+<div align="center">
+  
+*Este README é a versão em português brasileiro. Para instruções em inglês, veja [README.md](README.md).*
+
+</div> 
